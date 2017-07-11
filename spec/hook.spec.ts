@@ -4,7 +4,7 @@ import { HandlerInterface } from "assistant-alexa";
 describe('BeforeIntentHook', function() {
   describe("without @authentication decorator", function() {
     it("does nothing", async function(done) {
-      let responseHandler = await this.alexaHelper.pretendIntentCalled("noStrategy") as HandlerInterface;
+      let responseHandler = await callIntentHelper(this.alexaHelper, "noStrategy");
       expect(responseHandler.voiceMessage).toEqual("Valid.");
       done();
     });

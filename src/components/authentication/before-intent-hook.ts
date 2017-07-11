@@ -35,9 +35,13 @@ export class BeforeIntentHook {
     this.intent = intent;
 
     let strategies = this.retrieveStrategiesFromMetadata().map(strategyClass => this.strategyFactory(strategyClass));
-    if (strategies.length === 0) success(); // Hook is not enabled
+    if (strategies.length === 0) {
+      success(); // Hook is not enabled
+      return ; // Important!
+    }
 
     let collectedData = {};
+
     strategies
       .reduce((previous, current) => {
         return previous.then(value => {
@@ -64,15 +68,18 @@ export class BeforeIntentHook {
           // Write authentication data: Get collected data + data of last iteration!
           if (uniformedResult.status === AuthenticationResult.Authenticated) this.writeAuthenticationData(Object.assign(collectedData, uniformedResult.authenticatedData));
           
-          success();
+          return true;
         } else {
           this.tell(uniformedResult.status);
           failure(authenticationResult);
+          return false;
         }
       })
       .catch(error => {
         failure();
-        throw new Error(error);
+        throw error;
+      }).then(respondSuccess => {
+        if (respondSuccess) success();
       });
   }
 
