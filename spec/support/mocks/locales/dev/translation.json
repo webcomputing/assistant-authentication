@@ -1,0 +1,10 @@
+{
+  "root": {
+    "authentication": {
+      "forcePlatform": "Invalid OAuth."
+    }
+  },
+  "promptState": {
+    "pin": "Asking pin"
+  }
+}
