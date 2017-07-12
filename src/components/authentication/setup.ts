@@ -15,10 +15,10 @@ export class AuthenticationSetup {
   /** 
    * [Sync!] Adds all classes in a specific directory as strategies.
    * @param addOnly If set to true, this method only calls "addStrategy", but not final "registerStrategies"
-   * @param baseDirectory Base directory to start (process.cwd() + "/js")
+   * @param baseDirectory Base directory to start (process.cwd() + "/js/app")
    * @param dictionary Dictionary which contains strategy classes, defaults to "auth"
    */
-  registerByConvention(addOnly = false, baseDirectory = process.cwd() + "/js", dictionary = "/auth-strategies") {
+  registerByConvention(addOnly = false, baseDirectory = process.cwd() + "/js/app", dictionary = "/auth-strategies") {
     fs.readdirSync(baseDirectory + dictionary).forEach(file => {
       let suffixParts = file.split(".");
       let suffix = suffixParts[suffixParts.length-1];
