@@ -23,7 +23,7 @@ export abstract class PinAuthentication implements StrategyInterface {
 
   async authenticate(state: any, stateName: string, intent: string, machine: stateMachineInterfaces.Transitionable) {
     if (this.entities.contains("pin")) {
-      if (await this.validatePin(this.entities.get("pin"))) {
+      if (await this.validatePin(this.entities.get("pin") as string)) {
         await this.sessionFactory().set("authentication:current-pin", "given");
         log("PinStrategy: Pin validation was successful, saved 'given' boolean in session.");
         return AuthenticationResult.Authenticated;

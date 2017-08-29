@@ -31,7 +31,11 @@ export class MainState implements stateMachineInterfaces.State {
     this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
   }
 
-  unhandledIntent()  {
+  unhandledGenericIntent()  {
     this.responseFactory.createSimpleVoiceResponse().endSessionWith("In unhandledIntent!");
+  }
+
+  unansweredGenericIntent() {
+    this.responseFactory.createAndSendEmptyResponse();
   }
 }

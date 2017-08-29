@@ -1,6 +1,6 @@
 {
   "name": "assistant-authentication",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Supports authentication with strategys and @authenticate decorator",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"

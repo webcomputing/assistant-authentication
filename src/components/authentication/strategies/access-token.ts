@@ -14,7 +14,7 @@ export abstract class AccessTokenAuthentication implements StrategyInterface {
   async authenticate() {
     if (typeof this.extraction.oAuthToken === "undefined") return AuthenticationResult.ForcePlatformAuthentication;
 
-    let methodResult = await this.validateAccessToken(this.extraction.oAuthToken);
+    let methodResult = await this.validateAccessToken(this.extraction.oAuthToken as string);
     let internalResult = typeof methodResult === "boolean" ? { result: methodResult, authenticationData: {} } : methodResult;
 
     if (internalResult.result) {

@@ -15,7 +15,7 @@ export class SecondState implements stateMachineInterfaces.State {
     this.responseFactory = responseFactory;
   }
 
-  unhandledIntent()  {
+  unhandledGenericIntent()  {
     this.responseFactory.createSimpleVoiceResponse().endSessionWith("In unhandledIntent!");
   }
 
@@ -30,5 +30,9 @@ export class SecondState implements stateMachineInterfaces.State {
 
   printAuthenticationDataIntent() {
     this.responseFactory.createSimpleVoiceResponse().endSessionWith(this.authenticationData.username);
+  }
+
+  unansweredGenericIntent() {
+    this.responseFactory.createAndSendEmptyResponse();
   }
 }
