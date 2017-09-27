@@ -14,12 +14,12 @@
   ],
   "homepage": "http://www.assistantjs.org",
   "bugs": "https://github.com/webcomputing/assistant-authentication/issues",
-  "author": "Antonius Ostermann <ostermann.antonius@gmail.com> (http://www.antonius-ostermann.de)",
+  "author": "Antonius Ostermann",
   "repository": {
     "type": "git",
     "url": "https://github.com/webcomputing/assistant-authentication"
   },
-  "license": "SEE LICENSE IN <LICENSE>",
+  "license": "ISC",
   "peerDependencies": {
     "assistant-source": "^0.1.0"
   },
@@ -41,8 +41,6 @@
   "dependencies": {
     "@types/reflect-metadata": "0.0.5"
   },
-  "author": "Antonius Ostermann",
-  "license": "ISC",
   "main": "./lib/assistant-authentication.js",
   "typings": "./dts/assistant-authentication.d.ts",
   "publishConfig": {
