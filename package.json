@@ -8,8 +8,18 @@
   "keywords": [
     "authentication",
     "oauth",
-    "assistant.js"
+    "pin",
+    "authorization",
+    "AssistantJS"
   ],
+  "homepage": "http://www.assistantjs.org",
+  "bugs": "https://github.com/webcomputing/assistant-authentication/issues",
+  "author": "Antonius Ostermann <ostermann.antonius@gmail.com> (http://www.antonius-ostermann.de)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webcomputing/assistant-authentication"
+  },
+  "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
     "assistant-source": "^0.1.0"
   },
