@@ -1,6 +1,6 @@
 {
   "name": "assistant-authentication",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "Supports authentication with strategys and @authenticate decorator",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/webcomputing/assistant-authentication"
   },
-  "license": "ISC",
+  "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
     "assistant-source": "^0.1.0"
   },
@@ -42,8 +42,5 @@
     "@types/reflect-metadata": "0.0.5"
   },
   "main": "./lib/assistant-authentication.js",
-  "typings": "./dts/assistant-authentication.d.ts",
-  "publishConfig": {
-    "registry": "http://sinopia.verstehe.local:4873"
-  }
+  "typings": "./dts/assistant-authentication.d.ts"
 }
