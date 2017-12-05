@@ -21,7 +21,7 @@
   },
   "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
-    "assistant-source": "^0.1.0"
+    "assistant-source": ">= 0.1.0"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.48",
