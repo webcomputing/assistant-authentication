@@ -1,6 +1,6 @@
 import { ComponentDescriptor } from "inversify-components";
 import { StrategyClass } from "./public-interfaces";
-import { componentInterfaces } from "./private-interfaces";
+import { componentInterfaces, COMPONENT_NAME } from "./private-interfaces";
 
 import { AccessTokenAuthentication } from "./strategies/access-token";
 import { PinAuthentication } from "./strategies/pin";
@@ -8,7 +8,7 @@ import { BeforeIntentHook } from "./before-intent-hook";
 import { Hooks } from "assistant-source";
 
 export const descriptor: ComponentDescriptor = {
-  name: "authentication",
+  name: COMPONENT_NAME,
   interfaces: componentInterfaces,
   bindings: {
     root: (bindService) => {

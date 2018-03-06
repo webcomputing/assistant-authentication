@@ -4,6 +4,7 @@ import { State, TranslateHelper, ResponseFactory, Transitionable, Hooks, injecti
 
 import { AuthenticationStrategy, StrategyResult, AuthenticationResult, StrategyClass, StrategyFactory } from "./public-interfaces";
 import { authenticateMetadataKey } from "./annotations";
+import { COMPONENT_NAME } from "./private-interfaces";
 
 @injectable()
 export class BeforeIntentHook {
@@ -18,7 +19,7 @@ export class BeforeIntentHook {
     @inject("core:i18n:current-translate-helper") private i18n: TranslateHelper,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory
   ) {
-    this.logger = loggerFactory("authentication");
+    this.logger = loggerFactory(COMPONENT_NAME);
   }
 
   /** Hook method, the only method which will be called */

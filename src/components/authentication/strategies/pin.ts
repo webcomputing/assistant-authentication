@@ -3,6 +3,7 @@ import { injectionNames, ComponentSpecificLoggerFactory, Session, EntityDictiona
 import { PromptFactory } from "assistant-validations";
 
 import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../public-interfaces";
+import { COMPONENT_NAME } from "../private-interfaces";
 
 @injectable()
 export abstract class PinAuthentication implements StrategyInterface {
@@ -20,7 +21,7 @@ export abstract class PinAuthentication implements StrategyInterface {
     this.sessionFactory = sessionFactory;
     this.promptFactory = promptFactory;
     this.entities = entities;
-    this.logger = loggerFactory("authentication");
+    this.logger = loggerFactory(COMPONENT_NAME);
   }
 
   async authenticate(state: any, stateName: string, intent: string, machine: Transitionable) {
