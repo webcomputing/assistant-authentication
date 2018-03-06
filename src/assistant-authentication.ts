@@ -1,4 +1,4 @@
-export * from "./components/authentication/interfaces";
+export * from "./components/authentication/public-interfaces";
 export { descriptor } from "./components/authentication/descriptor";
 export { authenticate } from "./components/authentication/annotations";
 export { AuthenticationSetup } from "./components/authentication/setup";

@@ -2,7 +2,7 @@ import { Component } from "inversify-components";
 import { injectable, inject } from "inversify";
 import { State, TranslateHelper, ResponseFactory, Transitionable, Hooks } from "assistant-source";
 
-import { AuthenticationStrategy, StrategyResult, AuthenticationResult, StrategyClass, StrategyFactory } from "./interfaces";
+import { AuthenticationStrategy, StrategyResult, AuthenticationResult, StrategyClass, StrategyFactory } from "./public-interfaces";
 import { authenticateMetadataKey } from "./annotations";
 
 import { log } from "../../global";

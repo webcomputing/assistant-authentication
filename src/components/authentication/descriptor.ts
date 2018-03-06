@@ -1,5 +1,6 @@
 import { ComponentDescriptor } from "inversify-components";
-import { componentInterfaces, StrategyClass } from "./interfaces";
+import { StrategyClass } from "./public-interfaces";
+import { componentInterfaces } from "./private-interfaces";
 
 import { AccessTokenAuthentication } from "./strategies/access-token";
 import { PinAuthentication } from "./strategies/pin";

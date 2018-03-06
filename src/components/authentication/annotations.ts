@@ -1,4 +1,4 @@
-import { StrategyClass } from "./interfaces";
+import { StrategyClass } from "./public-interfaces";
 export const authenticateMetadataKey = Symbol("metadata-key: authenticate");
 
 export function authenticate(authenticationStrategies: StrategyClass[] | StrategyClass, authenticationDataAttribute?: string) {

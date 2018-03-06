@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import { OptionalExtractions, MinimalRequestExtraction } from "assistant-source";
 
-import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../interfaces";
+import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../public-interfaces";
 
 @injectable()
 export abstract class AccessTokenAuthentication implements StrategyInterface {

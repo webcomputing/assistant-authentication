@@ -1,7 +1,7 @@
 import { ComponentDescriptor } from "inversify-components";
 import { AssistantJSSetup } from "assistant-source";
 import * as fs from "fs";
-import { StrategyClass, AuthenticationStrategy } from "./interfaces";
+import { StrategyClass, AuthenticationStrategy } from "./public-interfaces";
 import { log } from "../../global";
 
 export class AuthenticationSetup {

@@ -2,7 +2,7 @@ import { injectable, inject, optional } from "inversify";
 import { stateMachineInterfaces, servicesInterfaces, unifierInterfaces } from "assistant-source";
 import { PromptFactory } from "assistant-validations";
 
-import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../interfaces";
+import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../public-interfaces";
 import { log } from "../../../global";
 
 @injectable()

@@ -1,4 +1,4 @@
-import { AuthenticationResult } from "../src/components/authentication/interfaces";
+import { AuthenticationResult } from "../src/components/authentication/public-interfaces";
 
 /** Mock strategy classes, only used for this test */
 import { OAuthStrategy } from "./support/mocks/auth-strategies/oauth-strategy";

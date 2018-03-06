@@ -1,7 +1,7 @@
 import { callIntentHelper, makeValidPinExtraction } from "./support/call-intent-helper";
-import { AuthenticationResult } from "../src/components/authentication/interfaces";
+import { AuthenticationResult } from "../src/components/authentication/public-interfaces";
 import { PinStrategy } from "./support/mocks/auth-strategies/pin-strategy";
-import { componentInterfaces } from "../src/components/authentication/interfaces";
+import { componentInterfaces } from "../src/components/authentication/private-interfaces";
 import { MainState } from "./support/mocks/states/main";
 
 import { MinimalResponseHandler, Transitionable, Session, injectionNames } from "assistant-source";
