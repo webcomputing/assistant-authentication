@@ -1,16 +1,17 @@
 require("reflect-metadata");
-let assistantJsCore = require("assistant-source");
-let alexa = require("assistant-alexa");
-let assistantValidations = require("assistant-validations");
+const assistantJsCore = require("assistant-source");
+const alexa = require("assistant-alexa");
+const assistantValidations = require("assistant-validations");
 
-let ownComponent = require("../../src/components/authentication/descriptor");
-let ownSetup = require("../../src/components/authentication/setup").AuthenticationSetup;
+const ownComponent = require("../../src/components/authentication/descriptor");
+const ownSetup = require("../../src/components/authentication/setup").AuthenticationSetup;
 
-let mainState = require("../support/mocks/states/main").MainState;
-let secondState = require("../support/mocks/states/second").SecondState;
+const mainState = require("../support/mocks/states/main").MainState;
+const secondState = require("../support/mocks/states/second").SecondState;
+const promptState = require("../support/mocks/states/prompt").PromptState;
 
-let oAuthStrategy = require("../support/mocks/auth-strategies/oauth-strategy").OAuthStrategy;
-let pinStrategy = require("../support/mocks/auth-strategies/pin-strategy").PinStrategy;
+const oAuthStrategy = require("../support/mocks/auth-strategies/oauth-strategy").OAuthStrategy;
+const pinStrategy = require("../support/mocks/auth-strategies/pin-strategy").PinStrategy;
 
 beforeEach(function() {
   this.specHelper = new assistantJsCore.SpecSetup();
@@ -27,6 +28,11 @@ beforeEach(function() {
           "loadPath": process.cwd() + "/spec/support/mocks/locales/{{lng}}/{{ns}}.json"
         }
       }
+    },
+    "core:unifier": {
+      "entities": {
+        "number": ["pin"]
+      }
     }
   });
 
@@ -39,6 +45,5 @@ beforeEach(function() {
   this.authenticateHelper.addStrategy(pinStrategy);
   this.authenticateHelper.registerStrategies();
 
-
-  this.specHelper.prepare([mainState, assistantValidations.PromptState, secondState]);
+  this.specHelper.prepare([mainState, promptState, secondState]);
 });

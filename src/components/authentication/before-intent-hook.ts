@@ -1,6 +1,6 @@
-import { Hooks, Component } from "inversify-components";
+import { Component } from "inversify-components";
 import { injectable, inject } from "inversify";
-import { unifierInterfaces, stateMachineInterfaces, i18nInterfaces } from "assistant-source";
+import { State, TranslateHelper, ResponseFactory, Transitionable, Hooks } from "assistant-source";
 
 import { AuthenticationStrategy, StrategyResult, AuthenticationResult, StrategyClass, StrategyFactory } from "./interfaces";
 import { authenticateMetadataKey } from "./annotations";
@@ -9,18 +9,18 @@ import { log } from "../../global";
 
 @injectable()
 export class BeforeIntentHook {
-  private state: stateMachineInterfaces.State;
+  private state: State.Required;
   private stateName: string;
   private intent: string;
 
   private strategyFactory: StrategyFactory;
-  private responseFactory: unifierInterfaces.ResponseFactory;
-  private i18n: i18nInterfaces.TranslateHelper;
+  private responseFactory: ResponseFactory;
+  private i18n: TranslateHelper;
 
   constructor(
     @inject("authentication:strategy-factory") factory: StrategyFactory,
-    @inject("core:unifier:current-response-factory") responseFactory: unifierInterfaces.ResponseFactory,
-    @inject("core:i18n:current-translate-helper") i18n: i18nInterfaces.TranslateHelper
+    @inject("core:unifier:current-response-factory") responseFactory: ResponseFactory,
+    @inject("core:i18n:current-translate-helper") i18n: TranslateHelper
   ) {
     this.i18n = i18n;
     this.strategyFactory = factory;
@@ -28,7 +28,7 @@ export class BeforeIntentHook {
   }
 
   /** Hook method, the only method which will be called */
-  execute: Hooks.Hook = (success, failure, mode, state, stateName, intent, machine: stateMachineInterfaces.Transitionable) => {
+  execute: Hooks.BeforeIntentHook = (mode, state, stateName, intent, machine) => {
     log("Executing hook with stateName = " + stateName + " and intent = " + intent);
     this.state = state;
     this.stateName = stateName;
@@ -36,13 +36,12 @@ export class BeforeIntentHook {
 
     let strategies = this.retrieveStrategiesFromMetadata().map(strategyClass => this.strategyFactory(strategyClass));
     if (strategies.length === 0) {
-      success(); // Hook is not enabled
-      return ; // Important!
+      return true;
     }
 
     let collectedData = {};
 
-    strategies
+    return strategies
       .reduce((previous, current) => {
         return previous.then(value => {
           let uniformedValue = typeof(value) === "object" ? value : { status: value };
@@ -71,15 +70,8 @@ export class BeforeIntentHook {
           return true;
         } else {
           this.tell(uniformedResult.status);
-          failure(authenticationResult);
           return false;
         }
-      })
-      .catch(error => {
-        failure();
-        throw error;
-      }).then(respondSuccess => {
-        if (respondSuccess) success();
       });
   }
 
@@ -108,7 +100,7 @@ export class BeforeIntentHook {
   }
 
   /** Runs given strategy, forces return to be a promise */
-  private runStrategy(strategy: AuthenticationStrategy, machine: stateMachineInterfaces.Transitionable) {
+  private runStrategy(strategy: AuthenticationStrategy, machine: Transitionable) {
     log("Running strategy " + strategy.constructor.name);
     return Promise.resolve(strategy.authenticate(this.state, this.stateName, this.intent, machine));
   }

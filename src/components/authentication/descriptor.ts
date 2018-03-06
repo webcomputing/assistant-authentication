@@ -1,9 +1,10 @@
-import { ComponentDescriptor, Hooks } from "inversify-components";
+import { ComponentDescriptor } from "inversify-components";
 import { componentInterfaces, StrategyClass } from "./interfaces";
 
 import { AccessTokenAuthentication } from "./strategies/access-token";
 import { PinAuthentication } from "./strategies/pin";
 import { BeforeIntentHook } from "./before-intent-hook";
+import { Hooks } from "assistant-source";
 
 export const descriptor: ComponentDescriptor = {
   name: "authentication",
@@ -20,7 +21,7 @@ export const descriptor: ComponentDescriptor = {
     request: (bindService, lookupService) => {
       // Register hook function as method of a class
       bindService.bindLocalServiceToSelf<BeforeIntentHook>(BeforeIntentHook)
-      bindService.bindExtension<Hooks.Hook>(lookupService.lookup("core:state-machine").getInterface("beforeIntent")).toDynamicValue(context => {
+      bindService.bindExtension<Hooks.BeforeIntentHook>(lookupService.lookup("core:state-machine").getInterface("beforeIntent")).toDynamicValue(context => {
         return context.container.get<BeforeIntentHook>(BeforeIntentHook).execute;
       });
 }

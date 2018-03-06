@@ -1,4 +1,4 @@
-import { stateMachineInterfaces } from "assistant-source";
+import { Transitionable } from "assistant-source";
 
 export enum AuthenticationResult {
   Authenticated, // If authentication was successful
@@ -9,7 +9,7 @@ export enum AuthenticationResult {
 
 export declare type StrategyResult = { status: AuthenticationResult, authenticatedData?: {} } | AuthenticationResult;
 export interface AuthenticationStrategy {
-  authenticate(state: any, stateName: string, intent: string, machine: stateMachineInterfaces.Transitionable): Promise<StrategyResult> | StrategyResult;
+  authenticate(state: any, stateName: string, intent: string, machine: Transitionable): Promise<StrategyResult> | StrategyResult;
 }
 
 export interface StrategyClass {

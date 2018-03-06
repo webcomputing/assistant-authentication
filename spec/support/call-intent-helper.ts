@@ -1,8 +1,8 @@
-import { unifierInterfaces } from "assistant-source";
+import { PlatformSpecHelper, intent } from "assistant-source";
 
 export declare type ValidStrategies = 'oAuth' | 'pin'
 
-export async function callIntentHelper(platformHelper: unifierInterfaces.PlatformSpecHelper, intent: unifierInterfaces.intent, validStrategies: ValidStrategies[] = [], state: "MainState" | "SecondState" = "MainState") {
+export async function callIntentHelper(platformHelper: PlatformSpecHelper, intent: intent, validStrategies: ValidStrategies[] = [], state: "MainState" | "SecondState" = "MainState") {
   let extractions = validStrategies.reduce((previous, current) => {
     let extraction: any;
 

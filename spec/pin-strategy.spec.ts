@@ -4,13 +4,13 @@ import { PinStrategy } from "./support/mocks/auth-strategies/pin-strategy";
 import { componentInterfaces } from "../src/components/authentication/interfaces";
 import { MainState } from "./support/mocks/states/main";
 
-import { unifierInterfaces, stateMachineInterfaces, injectionNames, servicesInterfaces } from "assistant-source";
+import { MinimalResponseHandler, Transitionable, Session, injectionNames } from "assistant-source";
 
 describe("PinAuthentication", function() {
-  let responseHandler: unifierInterfaces.MinimalResponseHandler;
+  let responseHandler: MinimalResponseHandler;
   let strategyClass: PinStrategy;
-  let machine: stateMachineInterfaces.Transitionable;
-  let currentSessionFactory: () => servicesInterfaces.Session;
+  let machine: Transitionable;
+  let currentSessionFactory: () => Session;
 
   /** Small helper function: Calls strategy class' authenticate method */
   let callAuthenticate = (intent = "pinStrategy") => {

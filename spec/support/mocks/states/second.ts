@@ -1,4 +1,4 @@
-import { stateMachineInterfaces, unifierInterfaces, injectionNames } from "assistant-source";
+import { injectionNames, State, ResponseFactory } from "assistant-source";
 import { inject, injectable } from "inversify";
 
 import { authenticate } from "../../../../src/components/authentication/annotations";
@@ -7,8 +7,8 @@ import { PinStrategy } from "../auth-strategies/pin-strategy";
 
 @authenticate(OAuthStrategy, "authenticationData")
 @injectable()
-export class SecondState implements stateMachineInterfaces.State {
-  responseFactory: unifierInterfaces.ResponseFactory;
+export class SecondState implements State.Required {
+  responseFactory: ResponseFactory;
   authenticationData: any;
 
   constructor(@inject(injectionNames.current.responseFactory) responseFactory) {
