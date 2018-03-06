@@ -2,7 +2,6 @@ import { ComponentDescriptor } from "inversify-components";
 import { AssistantJSSetup } from "assistant-source";
 import * as fs from "fs";
 import { StrategyClass, AuthenticationStrategy } from "./public-interfaces";
-import { log } from "../../global";
 
 export class AuthenticationSetup {
   strategySet: { [name: string]: StrategyClass } = {};
@@ -41,7 +40,6 @@ export class AuthenticationSetup {
    * @param name Name of strategy, by convention it defaults to name of class
   */
   addStrategy(strategyClass: StrategyClass, name = strategyClass.name) {
-    log("Setup registered strategy with name = " + name);
     this.strategySet[name] = strategyClass;
   }
 

@@ -28,7 +28,6 @@
     "assistant-alexa": "../assistant-alexa/assistant-alexa-0.3.0.tgz",
     "assistant-source": "../assistant-source/assistant-source-0.3.0.tgz",
     "assistant-validations": "../assistant-validations/assistant-validations-0.3.0.tgz",
-    "debug": "^2.6.8",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-tslint": "^8.1.0",
