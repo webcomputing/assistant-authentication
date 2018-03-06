@@ -1,6 +1,6 @@
 {
   "name": "assistant-authentication",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Supports authentication with strategys and @authenticate decorator",
   "scripts": {
     "test": "jasmine-ts spec/**/*.spec.ts"
@@ -21,20 +21,20 @@
   },
   "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
-    "assistant-source": ">= 0.1.0"
+    "assistant-source": "^0.3.0"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.48",
-    "assistant-alexa": "^0.1.0",
-    "assistant-source": "^0.1.0",
-    "assistant-validations": "^0.1.0",
+    "assistant-alexa": "../assistant-alexa/assistant-alexa-0.3.0.tgz",
+    "assistant-source": "../assistant-source/assistant-source-0.3.0.tgz",
+    "assistant-validations": "../assistant-validations/assistant-validations-0.3.0.tgz",
     "debug": "^2.6.8",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-tslint": "^8.1.0",
     "gulp-typescript": "3.1.7",
     "jasmine-ts": "^0.1.3",
-    "reflect-metadata": "^0.1.10",
+    "reflect-metadata": "^0.1.12",
     "tslint": "^5.4.0",
     "typescript": "2.3.4"
   },
