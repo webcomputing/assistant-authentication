@@ -1,48 +1,42 @@
-import { Hooks, Component } from "inversify-components";
+import { Component } from "inversify-components";
 import { injectable, inject } from "inversify";
-import { unifierInterfaces, stateMachineInterfaces, i18nInterfaces } from "assistant-source";
+import { State, TranslateHelper, ResponseFactory, Transitionable, Hooks, injectionNames, ComponentSpecificLoggerFactory, Logger } from "assistant-source";
 
-import { AuthenticationStrategy, StrategyResult, AuthenticationResult, StrategyClass, StrategyFactory } from "./interfaces";
+import { AuthenticationStrategy, StrategyResult, AuthenticationResult, StrategyClass, StrategyFactory } from "./public-interfaces";
 import { authenticateMetadataKey } from "./annotations";
-
-import { log } from "../../global";
+import { COMPONENT_NAME } from "./private-interfaces";
 
 @injectable()
 export class BeforeIntentHook {
-  private state: stateMachineInterfaces.State;
+  private state: State.Required;
   private stateName: string;
   private intent: string;
-
-  private strategyFactory: StrategyFactory;
-  private responseFactory: unifierInterfaces.ResponseFactory;
-  private i18n: i18nInterfaces.TranslateHelper;
+  private logger: Logger;
 
   constructor(
-    @inject("authentication:strategy-factory") factory: StrategyFactory,
-    @inject("core:unifier:current-response-factory") responseFactory: unifierInterfaces.ResponseFactory,
-    @inject("core:i18n:current-translate-helper") i18n: i18nInterfaces.TranslateHelper
+    @inject("authentication:strategy-factory") private strategyFactory: StrategyFactory,
+    @inject("core:unifier:current-response-factory") private responseFactory: ResponseFactory,
+    @inject("core:i18n:current-translate-helper") private i18n: TranslateHelper,
+    @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory
   ) {
-    this.i18n = i18n;
-    this.strategyFactory = factory;
-    this.responseFactory = responseFactory;
+    this.logger = loggerFactory(COMPONENT_NAME);
   }
 
   /** Hook method, the only method which will be called */
-  execute: Hooks.Hook = (success, failure, mode, state, stateName, intent, machine: stateMachineInterfaces.Transitionable) => {
-    log("Executing hook with stateName = " + stateName + " and intent = " + intent);
+  execute: Hooks.BeforeIntentHook = (mode, state, stateName, intent, machine) => {
+    this.logger.debug({state: stateName, intent: intent}, "Executing hook");
     this.state = state;
     this.stateName = stateName;
     this.intent = intent;
 
     let strategies = this.retrieveStrategiesFromMetadata().map(strategyClass => this.strategyFactory(strategyClass));
     if (strategies.length === 0) {
-      success(); // Hook is not enabled
-      return ; // Important!
+      return true;
     }
 
     let collectedData = {};
 
-    strategies
+    return strategies
       .reduce((previous, current) => {
         return previous.then(value => {
           let uniformedValue = typeof(value) === "object" ? value : { status: value };
@@ -61,7 +55,6 @@ export class BeforeIntentHook {
 
       .then(authenticationResult => {
         let uniformedResult = typeof(authenticationResult) === "object" ? authenticationResult : { status: authenticationResult, authenticatedData: {} };
-        log("Retrieving authentication result %o", uniformedResult);
 
         if (uniformedResult.status === AuthenticationResult.Authenticated || uniformedResult.status === -1) {
 
@@ -71,15 +64,8 @@ export class BeforeIntentHook {
           return true;
         } else {
           this.tell(uniformedResult.status);
-          failure(authenticationResult);
           return false;
         }
-      })
-      .catch(error => {
-        failure();
-        throw error;
-      }).then(respondSuccess => {
-        if (respondSuccess) success();
       });
   }
 
@@ -87,12 +73,12 @@ export class BeforeIntentHook {
   private tell(status: AuthenticationResult) {
     switch (status) {
       case AuthenticationResult.Failed:
-        log("Answering with .authentication.faild");
+        this.logger.info("Answering with .authentication.failed");
         this.responseFactory.createVoiceResponse().endSessionWith(this.i18n.t(".authentication.failed"));
         break;
 
       case AuthenticationResult.ForcePlatformAuthentication:
-        log("Answering with .authentication.forcePlatform");
+        this.logger.info("Answering with .authentication.forcePlatform");
         this.responseFactory.createAndSendUnauthenticatedResponse(this.i18n.t(".authentication.forcePlatform"));
         break;
     }
@@ -103,13 +89,13 @@ export class BeforeIntentHook {
     let dataAttribute = this.retrieveDataAttributeFromMetadata();
     if (typeof(dataAttribute) !== "string") return;
 
-    log("Setting authentication data to '"+ dataAttribute +"'");
+    this.logger.debug("Setting authentication data to '"+ dataAttribute +"'");
     this.state[dataAttribute] = data;
   }
 
   /** Runs given strategy, forces return to be a promise */
-  private runStrategy(strategy: AuthenticationStrategy, machine: stateMachineInterfaces.Transitionable) {
-    log("Running strategy " + strategy.constructor.name);
+  private runStrategy(strategy: AuthenticationStrategy, machine: Transitionable) {
+    this.logger.debug("Running strategy " + strategy.constructor.name);
     return Promise.resolve(strategy.authenticate(this.state, this.stateName, this.intent, machine));
   }
 
@@ -129,7 +115,6 @@ export class BeforeIntentHook {
 
     // Return merged result
     let allStrategies = stateStrategies.concat(intentStrategies);
-    log("Retrieving all strategies: ", allStrategies);
     return allStrategies;
   }
 
@@ -146,7 +131,7 @@ export class BeforeIntentHook {
     }
 
     // 3) Return undefined
-    log("Data attribute not found.");
+    this.logger.info("Not using any data attribute.");
     return undefined;
   }
 }

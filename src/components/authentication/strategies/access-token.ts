@@ -1,13 +1,13 @@
 import { injectable, inject } from "inversify";
-import { unifierInterfaces } from "assistant-source";
+import { OptionalExtractions, MinimalRequestExtraction } from "assistant-source";
 
-import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../interfaces";
+import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../public-interfaces";
 
 @injectable()
 export abstract class AccessTokenAuthentication implements StrategyInterface {
-  private extraction: unifierInterfaces.MinimalRequestExtraction & unifierInterfaces.OptionalExtractions.OAuthExtraction;
+  private extraction: MinimalRequestExtraction & OptionalExtractions.OAuthExtraction;
 
-  constructor(@inject("core:unifier:current-extraction") extraction: unifierInterfaces.MinimalRequestExtraction & unifierInterfaces.OptionalExtractions.OAuthExtraction) {
+  constructor(@inject("core:unifier:current-extraction") extraction: MinimalRequestExtraction & OptionalExtractions.OAuthExtraction) {
     this.extraction = extraction;
   }
 
