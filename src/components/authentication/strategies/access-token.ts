@@ -5,9 +5,9 @@ import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } fro
 
 @injectable()
 export abstract class AccessTokenAuthentication implements StrategyInterface {
-  private extraction: MinimalRequestExtraction & OptionalExtractions.OAuthExtraction;
+  private extraction: MinimalRequestExtraction & OptionalExtractions.OAuth;
 
-  constructor(@inject("core:unifier:current-extraction") extraction: MinimalRequestExtraction & OptionalExtractions.OAuthExtraction) {
+  constructor(@inject("core:unifier:current-extraction") extraction: MinimalRequestExtraction & OptionalExtractions.OAuth) {
     this.extraction = extraction;
   }
 
