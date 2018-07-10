@@ -70,16 +70,16 @@ export class BeforeIntentHook {
   }
 
   /** Says sth to end user if needed */
-  private tell(status: AuthenticationResult) {
+  private async tell(status: AuthenticationResult) {
     switch (status) {
       case AuthenticationResult.Failed:
         this.logger.info("Answering with .authentication.failed");
-        this.responseFactory.createVoiceResponse().endSessionWith(this.i18n.t(".authentication.failed"));
+        this.responseFactory.createVoiceResponse().endSessionWith(await this.i18n.t(".authentication.failed"));
         break;
 
       case AuthenticationResult.ForcePlatformAuthentication:
         this.logger.info("Answering with .authentication.forcePlatform");
-        this.responseFactory.createAndSendUnauthenticatedResponse(this.i18n.t(".authentication.forcePlatform"));
+        this.responseFactory.createAndSendUnauthenticatedResponse(await this.i18n.t(".authentication.forcePlatform"));
         break;
     }
   }
