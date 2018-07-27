@@ -1,6 +1,6 @@
 /** Component interfaces of assistant-authentication */
 export const componentInterfaces = {
-  "authenticationStrategy": Symbol("authentication:authentication-strategy")
+  authenticationStrategy: Symbol("authentication:authentication-strategy"),
 };
 
 export namespace Configuration {
@@ -11,7 +11,7 @@ export namespace Configuration {
   export interface Required {}
 
   /** Available configuration settings in a runtime application */
-  export interface Runtime extends Defaults, Required {};
+  export interface Runtime extends Defaults, Required {}
 }
 
 export const COMPONENT_NAME = "authentication";

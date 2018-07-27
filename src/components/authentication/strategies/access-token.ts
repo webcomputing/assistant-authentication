@@ -1,7 +1,7 @@
-import { injectable, inject } from "inversify";
-import { OptionalExtractions, MinimalRequestExtraction } from "assistant-source";
+import { MinimalRequestExtraction, OptionalExtractions } from "assistant-source";
+import { inject, injectable } from "inversify";
 
-import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../public-interfaces";
+import { AuthenticationResult, AuthenticationStrategy as StrategyInterface } from "../public-interfaces";
 
 @injectable()
 export abstract class AccessTokenAuthentication implements StrategyInterface {
@@ -11,11 +11,11 @@ export abstract class AccessTokenAuthentication implements StrategyInterface {
     this.extraction = extraction;
   }
 
-  async authenticate() {
+  public async authenticate() {
     if (typeof this.extraction.oAuthToken === "undefined") return AuthenticationResult.ForcePlatformAuthentication;
 
-    let methodResult = await this.validateAccessToken(this.extraction.oAuthToken as string);
-    let internalResult = typeof methodResult === "boolean" ? { result: methodResult, authenticationData: {} } : methodResult;
+    const methodResult = await this.validateAccessToken(this.extraction.oAuthToken as string);
+    const internalResult = typeof methodResult === "boolean" ? { result: methodResult, authenticationData: {} } : methodResult;
 
     if (internalResult.result) {
       return { status: AuthenticationResult.Authenticated, authenticatedData: internalResult.authenticationData };
@@ -24,5 +24,5 @@ export abstract class AccessTokenAuthentication implements StrategyInterface {
     }
   }
 
-  abstract async validateAccessToken(token: string): Promise<boolean | { result: boolean, authenticationData: any }>;
+  public abstract async validateAccessToken(token: string): Promise<boolean | { result: boolean; authenticationData: any }>;
 }
