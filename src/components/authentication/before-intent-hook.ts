@@ -25,7 +25,7 @@ export class BeforeIntentHook {
   constructor(
     @inject("authentication:strategy-factory") private strategyFactory: StrategyFactory,
     @inject(injectionNames.current.responseHandler) private responseHandler: BasicHandable<BasicAnswerTypes> & OptionalHandlerFeatures.Authentication,
-    @inject("core:i18n:current-translate-helper") private i18n: TranslateHelper,
+    @inject(injectionNames.current.translateHelper) private i18n: TranslateHelper,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory
   ) {
     this.logger = loggerFactory(COMPONENT_NAME);
