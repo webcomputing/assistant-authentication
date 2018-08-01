@@ -5,7 +5,7 @@ import { OAuthStrategy } from "./support/mocks/auth-strategies/oauth-strategy";
 import { ThisContext } from "./this-context";
 class OAuthMock extends OAuthStrategy {
   constructor(result = true) {
-    super({ oAuthToken: result === true ? "validToken" : "invalidToken" } as any);
+    super({ oAuthToken: result ? "validToken" : "invalidToken" } as any);
   }
 }
 

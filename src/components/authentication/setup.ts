@@ -53,6 +53,7 @@ export class AuthenticationSetup {
     return {
       name: "authentication:strategies",
       bindings: {
+        // tslint:disable-next-line:no-empty
         root: () => {},
         request: (bindService, lookupService) => {
           const strategyInterface = lookupService.lookup("authentication").getInterface("authenticationStrategy");

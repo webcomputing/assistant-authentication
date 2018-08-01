@@ -22,10 +22,12 @@
   },
   "license": "SEE LICENSE IN <LICENSE>",
   "peerDependencies": {
-    "assistant-source": "^0.4.0"
+    "assistant-source": "^0.4.0",
+    "inversify": "4.1.1",
+    "inversify-components": "^0.4.0"
   },
   "devDependencies": {
-    "@types/jasmine": "^2.5.48",    
+    "@types/jasmine": "^2.5.48",
     "assistant-alexa": "internal",
     "assistant-source": "internal",
     "assistant-validations": "internal",
@@ -42,7 +44,9 @@
     "tslint": "^5.4.0",
     "tslint-config-airbnb": "^5.9.2",
     "tslint-config-prettier": "^1.13.0",
-    "typescript": "~2.9.2"
+    "typescript": "~2.9.2",
+    "inversify": "4.1.1",
+    "inversify-components": "^0.4.0"
   },
   "dependencies": {
     "@types/reflect-metadata": "0.0.5"

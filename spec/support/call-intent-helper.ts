@@ -1,11 +1,12 @@
+// tslint:disable-next-line:no-implicit-dependencies
 import { AlexaSpecHelper } from "assistant-alexa";
-import { BasicAnswerTypes, intent } from "assistant-source";
+import { BasicAnswerTypes, intent as Intent } from "assistant-source";
 
 export declare type ValidStrategies = "oAuth" | "pin";
 
 export async function callIntentHelper(
   alexaSpecHelper: AlexaSpecHelper,
-  intent: intent,
+  intent: Intent,
   validStrategies: ValidStrategies[] = [],
   state: "MainState" | "SecondState" = "MainState"
 ): Promise<Partial<BasicAnswerTypes>> {

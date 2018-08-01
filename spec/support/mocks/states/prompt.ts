@@ -8,6 +8,7 @@ import {
   PlatformGenerator,
   State,
 } from "assistant-source";
+// tslint:disable-next-line:no-implicit-dependencies
 import { PromptStateMixin, PromptStateMixinRequirements } from "assistant-validations";
 import { inject, injectable } from "inversify";
 
@@ -28,6 +29,7 @@ class PromptStateRequirements<CustomTypes extends BasicAnswerTypes, CustomHandle
   }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 @injectable()
 export class PromptState<CustomTypes extends BasicAnswerTypes, CustomHandler extends BasicHandable<CustomTypes>> extends PromptStateMixin(
   PromptStateRequirements
