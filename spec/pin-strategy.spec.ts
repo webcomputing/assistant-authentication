@@ -8,7 +8,8 @@ import { injectionNames, Session, Transitionable } from "assistant-source";
 import { ThisContext } from "./this-context";
 
 interface CurrentThisContext extends ThisContext {
-  initialize: any;
+  /** Initializes the necessary spec setup */
+  initialize(containsPin?: boolean, pinIsValid?: boolean);
 }
 
 describe("PinAuthentication", function() {
@@ -66,7 +67,7 @@ describe("PinAuthentication", function() {
           await callAuthenticate();
           await this.alexaSpecHelper.specSetup.runMachine("MainState");
           const result = this.alexaSpecHelper.specSetup.getResponseResults();
-          expect(result.voiceMessage.text).toEqual("Asking pin");
+          expect(result.voiceMessage!.text).toEqual("Asking pin");
         });
       });
 
