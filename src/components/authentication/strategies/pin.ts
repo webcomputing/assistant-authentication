@@ -1,4 +1,5 @@
 import { ComponentSpecificLoggerFactory, EntityDictionary, injectionNames, Logger, Session, Transitionable } from "assistant-source";
+// tslint:disable-next-line:no-implicit-dependencies
 import { PromptFactory } from "assistant-validations";
 import { inject, injectable, optional } from "inversify";
 
@@ -13,8 +14,8 @@ export abstract class PinAuthentication implements StrategyInterface {
   private logger: Logger;
 
   constructor(
-    @inject("core:unifier:current-session-factory") sessionFactory: () => Session,
-    @inject("core:unifier:current-entity-dictionary") entities: EntityDictionary,
+    @inject(injectionNames.current.sessionFactory) sessionFactory: () => Session,
+    @inject(injectionNames.current.entityDictionary) entities: EntityDictionary,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
     @optional()
     @inject("validations:current-prompt-factory")
@@ -32,13 +33,11 @@ export abstract class PinAuthentication implements StrategyInterface {
         await this.sessionFactory().set("authentication:current-pin", "given");
         this.logger.info("PinStrategy: Pin validation was successful, saved 'given' boolean in session.");
         return AuthenticationResult.Authenticated;
-      } else {
-        return AuthenticationResult.Failed;
       }
-    } else {
-      this.logger.info("PinStrategy: Current request did not contain a pin!");
-      return this.authenticateBasedOnSession(stateName, intent, machine);
+      return AuthenticationResult.Failed;
     }
+    this.logger.info("PinStrategy: Current request did not contain a pin!");
+    return this.authenticateBasedOnSession(stateName, intent, machine);
   }
 
   public authenticateBasedOnSession(stateName: string, intent: string, machine: Transitionable) {
@@ -49,13 +48,13 @@ export abstract class PinAuthentication implements StrategyInterface {
           // If the string stored in session is === "given", return successful result
           this.logger.info("PinStrategy: Authentication successful, pin was given via session.");
           return AuthenticationResult.Authenticated;
-        } else if (pin === null) {
+        }
+        if (typeof pin === "undefined") {
           // If no pin is stored, return Deferred and start pin authentication
           return this.startPinAuthentication(intent, stateName, machine).then(() => AuthenticationResult.Deferred);
-        } else {
-          this.logger.info("PinStrategy: Pin was not given in session, so failing.");
-          return AuthenticationResult.Failed;
         }
+        this.logger.info("PinStrategy: Pin was not given in session, so failing.");
+        return AuthenticationResult.Failed;
       });
   }
 

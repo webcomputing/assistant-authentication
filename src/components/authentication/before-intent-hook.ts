@@ -66,6 +66,7 @@ export class BeforeIntentHook {
 
           return value;
         });
+        // tslint:disable-next-line:no-object-literal-type-assertion
       }, Promise.resolve({ authenticatedData: undefined, status: -1 } as StrategyResult))
 
       .then(authenticationResult => {

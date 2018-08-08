@@ -126,8 +126,8 @@ gulp.task("build-sources-and-maps", ["clean"], function() {
     .src(SOURCES)
     .pipe(sourcemaps.init())
     .pipe(tsLibProject())
-    .on("error", function(err) {
-      process.exit(1);
+    .once("error", function() {
+      this.once("finish", () => process.exit(1));
     })
     .js.pipe(sourcemaps.write(".", { includeContent: false, sourceRoot: "./" }))
     .pipe(gulp.dest(file => file.base));
@@ -138,8 +138,8 @@ gulp.task("build-sources", ["clean"], function() {
   return gulp
     .src(SOURCES)
     .pipe(tsLibProject())
-    .on("error", function(err) {
-      process.exit(1);
+    .once("error", function() {
+      this.once("finish", () => process.exit(1));
     })
     .js.pipe(gulp.dest(file => file.base));
 });

@@ -14,7 +14,7 @@ const oAuthStrategy = require("../support/mocks/auth-strategies/oauth-strategy")
 const pinStrategy = require("../support/mocks/auth-strategies/pin-strategy").PinStrategy;
 
 beforeEach(function() {
-  this.specHelper = new assistantJsCore.SpecSetup();
+  this.specHelper = new assistantJsCore.SpecHelper();
 
   this.assistantJs = this.specHelper.setup;
   this.assistantJs.registerComponent(alexa.descriptor);
@@ -23,27 +23,29 @@ beforeEach(function() {
 
   this.assistantJs.addConfiguration({
     "core:i18n": {
-      "i18nextAdditionalConfiguration": {
-        "backend": {
-          "loadPath": process.cwd() + "/spec/support/mocks/locales/{{lng}}/{{ns}}.json"
-        }
-      }
+      i18nextAdditionalConfiguration: {
+        backend: {
+          loadPath: process.cwd() + "/spec/support/mocks/locales/{{lng}}/{{ns}}.json",
+        },
+      },
     },
     "core:unifier": {
-      "entities": {
-        "number": ["pin"]
-      }
-    }
+      entities: {
+        number: ["pin"],
+      },
+    },
   });
 
   this.container = this.assistantJs.container;
 
-  this.alexaHelper = new alexa.SpecHelper(this.specHelper);
-  
+  this.alexaSpecHelper = new alexa.AlexaSpecHelper(this.specHelper);
+
   this.authenticateHelper = new ownSetup(this.assistantJs);
   this.authenticateHelper.addStrategy(oAuthStrategy);
   this.authenticateHelper.addStrategy(pinStrategy);
   this.authenticateHelper.registerStrategies();
 
-  this.specHelper.prepare([mainState, promptState, secondState]);
+  this.prepareWithStates = () => {
+    this.specHelper.prepare([mainState, promptState, secondState]);
+  };
 });
