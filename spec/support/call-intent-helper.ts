@@ -1,4 +1,3 @@
-// tslint:disable-next-line:no-implicit-dependencies
 import { AlexaSpecHelper } from "assistant-alexa";
 import { BasicAnswerTypes, intent as Intent } from "assistant-source";
 

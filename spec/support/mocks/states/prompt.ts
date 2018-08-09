@@ -15,11 +15,11 @@ import { inject, injectable } from "inversify";
  * This small class is needed to apply the PromptStateMixin since TypeScript does not allow type-specific constructor mixins.
  * Just add it to your regular class hierarchy.
  */
-class PromptStateRequirements<CustomTypes extends BasicAnswerTypes, CustomHandler extends BasicHandable<CustomTypes>>
-  extends BaseState<CustomTypes, CustomHandler>
+class PromptStateRequirements<MergedAnswerTypes extends BasicAnswerTypes, MergedHandler extends BasicHandable<MergedAnswerTypes>>
+  extends BaseState<MergedAnswerTypes, MergedHandler>
   implements PromptStateMixinRequirements {
   constructor(
-    stateSetupSet: State.SetupSet<CustomTypes, CustomHandler>,
+    stateSetupSet: State.SetupSet<MergedAnswerTypes, MergedHandler>,
     public entities: EntityDictionary,
     public sessionFactory: CurrentSessionFactory,
     public mappings: PlatformGenerator.EntityMapping
@@ -30,11 +30,11 @@ class PromptStateRequirements<CustomTypes extends BasicAnswerTypes, CustomHandle
 
 // tslint:disable-next-line:max-classes-per-file
 @injectable()
-export class PromptState<CustomTypes extends BasicAnswerTypes, CustomHandler extends BasicHandable<CustomTypes>> extends PromptStateMixin(
+export class PromptState<MergedAnswerTypes extends BasicAnswerTypes, MergedHandler extends BasicHandable<MergedAnswerTypes>> extends PromptStateMixin(
   PromptStateRequirements
-)<CustomTypes, CustomHandler> {
+)<MergedAnswerTypes, MergedHandler> {
   constructor(
-    @inject(injectionNames.current.stateSetupSet) setupSet: State.SetupSet<CustomTypes, CustomHandler>,
+    @inject(injectionNames.current.stateSetupSet) setupSet: State.SetupSet<MergedAnswerTypes, MergedHandler>,
     @inject(injectionNames.current.entityDictionary) entities: EntityDictionary,
     @inject(injectionNames.current.sessionFactory) sessionFactory: CurrentSessionFactory,
     @inject("core:unifier:user-entity-mappings") mappings: PlatformGenerator.EntityMapping

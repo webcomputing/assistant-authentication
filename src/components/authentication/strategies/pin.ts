@@ -1,5 +1,4 @@
 import { ComponentSpecificLoggerFactory, EntityDictionary, injectionNames, Logger, Session, Transitionable } from "assistant-source";
-// tslint:disable-next-line:no-implicit-dependencies
 import { PromptFactory } from "assistant-validations";
 import { inject, injectable, optional } from "inversify";
 
