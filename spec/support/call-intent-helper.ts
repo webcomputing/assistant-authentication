@@ -1,39 +1,45 @@
-import { PlatformSpecHelper, intent } from "assistant-source";
+import { AlexaSpecHelper } from "assistant-alexa";
+import { BasicAnswerTypes, intent as Intent } from "assistant-source";
 
-export declare type ValidStrategies = 'oAuth' | 'pin'
+export declare type ValidStrategies = "oAuth" | "pin";
 
-export async function callIntentHelper(platformHelper: PlatformSpecHelper, intent: intent, validStrategies: ValidStrategies[] = [], state: "MainState" | "SecondState" = "MainState") {
-  let extractions = validStrategies.reduce((previous, current) => {
+export async function callIntentHelper(
+  alexaSpecHelper: AlexaSpecHelper,
+  intent: Intent,
+  validStrategies: ValidStrategies[] = [],
+  state: "MainState" | "SecondState" = "MainState"
+): Promise<Partial<BasicAnswerTypes>> {
+  const extractions = validStrategies.reduce((previous, current) => {
     let extraction: any;
 
-    switch(current) {
-      case 'oAuth':
+    switch (current) {
+      case "oAuth":
         extraction = makeValidOAuthExtraction();
         break;
-      
-      case 'pin':
+
+      case "pin":
         extraction = makeValidPinExtraction();
         break;
     }
 
-    return Object.assign(previous, extraction);
+    return { ...previous, ...extraction };
   }, {});
 
-  let responseHandle = await platformHelper.pretendIntentCalled(intent, false, extractions);
-  await platformHelper.specSetup.runMachine(state);
-  return responseHandle;
+  await alexaSpecHelper.pretendIntentCalled(intent, false, extractions);
+  await alexaSpecHelper.specSetup.runMachine(state);
+  return alexaSpecHelper.specSetup.getResponseResults();
 }
 
 export function makeValidOAuthExtraction() {
   return {
-    oAuthToken: 'validToken'
-  }
+    oAuthToken: "validToken",
+  };
 }
 
 export function makeValidPinExtraction() {
   return {
     entities: {
-      pin: '1111'
-    }
-  }
+      pin: "1111",
+    },
+  };
 }

@@ -1,4 +1,4 @@
-import { State, ResponseFactory, injectionNames } from "assistant-source";
+import { BasicAnswerTypes, BasicHandler, injectionNames, State } from "assistant-source";
 import { inject, injectable } from "inversify";
 import { authenticate } from "../../../../src/components/authentication/annotations";
 import { OAuthStrategy } from "../auth-strategies/oauth-strategy";
@@ -6,36 +6,36 @@ import { PinStrategy } from "../auth-strategies/pin-strategy";
 
 @injectable()
 export class MainState implements State.Required {
-  responseFactory: ResponseFactory;
+  public responseHandler: BasicHandler<BasicAnswerTypes>;
 
-  constructor(@inject(injectionNames.current.responseFactory) responseFactory) {
-    this.responseFactory = responseFactory;
+  constructor(@inject(injectionNames.current.responseHandler) responseHandler) {
+    this.responseHandler = responseHandler;
   }
 
-  noStrategyIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
+  public noStrategyIntent() {
+    this.responseHandler.endSessionWith("Valid.");
   }
 
   @authenticate(OAuthStrategy)
-  oAuthStrategyIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
+  public oAuthStrategyIntent() {
+    this.responseHandler.endSessionWith("Valid.");
   }
 
   @authenticate(PinStrategy)
-  pinStrategyIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
+  public pinStrategyIntent() {
+    this.responseHandler.endSessionWith("Valid.");
   }
 
   @authenticate([PinStrategy, OAuthStrategy])
-  bothStrategiesIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
+  public bothStrategiesIntent() {
+    this.responseHandler.endSessionWith("Valid.");
   }
 
-  unhandledGenericIntent()  {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("In unhandledIntent!");
+  public unhandledGenericIntent() {
+    this.responseHandler.endSessionWith("In unhandledIntent!");
   }
 
-  unansweredGenericIntent() {
-    this.responseFactory.createAndSendEmptyResponse();
+  public unansweredGenericIntent() {
+    this.responseHandler.prompt("");
   }
 }

@@ -1,4 +1,4 @@
-import { injectionNames, State, ResponseFactory } from "assistant-source";
+import { BasicAnswerTypes, BasicHandler, injectionNames, State } from "assistant-source";
 import { inject, injectable } from "inversify";
 
 import { authenticate } from "../../../../src/components/authentication/annotations";
@@ -8,31 +8,31 @@ import { PinStrategy } from "../auth-strategies/pin-strategy";
 @authenticate(OAuthStrategy, "authenticationData")
 @injectable()
 export class SecondState implements State.Required {
-  responseFactory: ResponseFactory;
-  authenticationData: any;
+  public responseHandler: BasicHandler<BasicAnswerTypes>;
+  public authenticationData: any;
 
-  constructor(@inject(injectionNames.current.responseFactory) responseFactory) {
-    this.responseFactory = responseFactory;
+  constructor(@inject(injectionNames.current.responseHandler) responseHandler) {
+    this.responseHandler = responseHandler;
   }
 
-  unhandledGenericIntent()  {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("In unhandledIntent!");
+  public unhandledGenericIntent() {
+    this.responseHandler.endSessionWith("In unhandledIntent!");
   }
 
   @authenticate(PinStrategy)
-  pinStrategyIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
+  public pinStrategyIntent() {
+    this.responseHandler.endSessionWith("Valid.");
   }
 
-  noStrategyIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith("Valid.");
+  public noStrategyIntent() {
+    this.responseHandler.endSessionWith("Valid.");
   }
 
-  printAuthenticationDataIntent() {
-    this.responseFactory.createSimpleVoiceResponse().endSessionWith(this.authenticationData.username);
+  public printAuthenticationDataIntent() {
+    this.responseHandler.endSessionWith(this.authenticationData.username);
   }
 
-  unansweredGenericIntent() {
-    this.responseFactory.createAndSendEmptyResponse();
+  public unansweredGenericIntent() {
+    this.responseHandler.prompt("");
   }
 }

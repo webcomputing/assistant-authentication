@@ -1,17 +1,14 @@
-import { ComponentDescriptor } from "inversify-components";
-import { StrategyClass } from "./public-interfaces";
-import { componentInterfaces, COMPONENT_NAME } from "./private-interfaces";
-
-import { AccessTokenAuthentication } from "./strategies/access-token";
-import { PinAuthentication } from "./strategies/pin";
-import { BeforeIntentHook } from "./before-intent-hook";
 import { Hooks } from "assistant-source";
+import { ComponentDescriptor } from "inversify-components";
+import { BeforeIntentHook } from "./before-intent-hook";
+import { COMPONENT_NAME, componentInterfaces } from "./private-interfaces";
+import { StrategyClass } from "./public-interfaces";
 
 export const descriptor: ComponentDescriptor = {
   name: COMPONENT_NAME,
   interfaces: componentInterfaces,
   bindings: {
-    root: (bindService) => {
+    root: bindService => {
       // Bind strategy factory
       bindService.bindGlobalService("strategy-factory").toFactory(context => {
         return (strategyClass: StrategyClass) => {
@@ -21,10 +18,10 @@ export const descriptor: ComponentDescriptor = {
     },
     request: (bindService, lookupService) => {
       // Register hook function as method of a class
-      bindService.bindLocalServiceToSelf<BeforeIntentHook>(BeforeIntentHook)
+      bindService.bindLocalServiceToSelf<BeforeIntentHook>(BeforeIntentHook);
       bindService.bindExtension<Hooks.BeforeIntentHook>(lookupService.lookup("core:state-machine").getInterface("beforeIntent")).toDynamicValue(context => {
         return context.container.get<BeforeIntentHook>(BeforeIntentHook).execute;
       });
-}
-  }
+    },
+  },
 };
