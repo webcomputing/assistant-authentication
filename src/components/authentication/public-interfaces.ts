@@ -14,6 +14,9 @@ export enum AuthenticationResult {
   /** If authentication was successful */
   Authenticated,
 
+  /** If Authentication was canceld by the user */
+  Cancelled,
+
   /** If authentication was not successful in general. You should NOT reject in this case, use resolve(AuthenticationResult.Failed)! reject() will result in an error message! */
   Failed,
 
