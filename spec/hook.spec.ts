@@ -43,6 +43,7 @@ describe("BeforeIntentHook", function() {
           const responseResult = await callIntentHelper(this.alexaSpecHelper, "bothStrategies", ["pin"]);
           expect(responseResult.voiceMessage).toEqual({ text: "Invalid OAuth.", isSSML: false });
         });
+
         it("contains correct error message", async function(this: ThisContext) {
           const responseResult = await callIntentHelper(this.alexaSpecHelper, "bothStrategies", ["oAuth"]);
           expect(responseResult.voiceMessage).toEqual({ text: "Asking pin", isSSML: false });

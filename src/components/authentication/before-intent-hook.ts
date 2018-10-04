@@ -32,7 +32,7 @@ export class BeforeIntentHook {
   }
 
   /** Hook method, the only method which will be called */
-  public execute: Hooks.BeforeIntentHook = (mode, state, stateName, intent, machine) => {
+  public execute: Hooks.BeforeIntentHook = async (mode, state, stateName, intent, machine): Promise<boolean> => {
     this.logger.debug(
       {
         intent,
@@ -51,39 +51,33 @@ export class BeforeIntentHook {
 
     let collectedData = {};
 
-    return strategies
-      .reduce((previous, current) => {
-        return previous.then(value => {
-          const uniformedValue = typeof value === "object" ? value : { status: value };
+    const authenticationResult = await strategies.reduce((previous, current): Promise<StrategyResult> => {
+      return previous.then(value => {
+        const uniformedValue = typeof value === "object" ? value : { status: value };
 
-          if (uniformedValue.status === -1 || uniformedValue.status === AuthenticationResult.Authenticated) {
-            if (typeof uniformedValue.authenticatedData !== "undefined") {
-              collectedData = { ...collectedData, ...uniformedValue.authenticatedData };
-            }
-
-            return this.runStrategy(current, machine);
+        if (uniformedValue.status === -1 || uniformedValue.status === AuthenticationResult.Authenticated) {
+          if (typeof uniformedValue.authenticatedData !== "undefined") {
+            collectedData = { ...collectedData, ...uniformedValue.authenticatedData };
           }
-
-          return value;
-        });
-        // tslint:disable-next-line:no-object-literal-type-assertion
-      }, Promise.resolve({ authenticatedData: undefined, status: -1 } as StrategyResult))
-
-      .then(authenticationResult => {
-        const uniformedResult = typeof authenticationResult === "object" ? authenticationResult : { status: authenticationResult, authenticatedData: {} };
-
-        if (uniformedResult.status === AuthenticationResult.Authenticated || uniformedResult.status === -1) {
-          // Write authentication data: Get collected data + data of last iteration!
-          if (uniformedResult.status === AuthenticationResult.Authenticated) {
-            this.writeAuthenticationData({ ...collectedData, ...uniformedResult.authenticatedData });
-          }
-
-          return true;
+          return this.runStrategy(current, machine);
         }
 
-        this.tell(uniformedResult.status);
-        return false;
+        return value;
       });
+      // tslint:disable-next-line:no-object-literal-type-assertion
+    }, Promise.resolve({ authenticatedData: undefined, status: -1 } as StrategyResult));
+
+    const uniformedResult = typeof authenticationResult === "object" ? authenticationResult : { status: authenticationResult, authenticatedData: {} };
+    if (uniformedResult.status === AuthenticationResult.Authenticated || uniformedResult.status === -1) {
+      // Write authentication data: Get collected data + data of last iteration!
+      if (uniformedResult.status === AuthenticationResult.Authenticated) {
+        this.writeAuthenticationData({ ...collectedData, ...uniformedResult.authenticatedData });
+      }
+      return true;
+    }
+
+    this.tell(uniformedResult.status);
+    return false;
   };
 
   /** Says sth to end user if needed */
@@ -98,6 +92,11 @@ export class BeforeIntentHook {
         this.logger.info("Answering with .authentication.forcePlatform");
         this.responseHandler.prompt(this.i18n.t(".authentication.forcePlatform")).setUnauthenticated();
         break;
+
+      case AuthenticationResult.Cancelled:
+        this.logger.info("Answering with .authentication.cancelled");
+        this.responseHandler.prompt(this.i18n.t(".authentication.cancelled")).setEndSession();
+        break;
     }
   }
 
@@ -111,7 +110,7 @@ export class BeforeIntentHook {
   }
 
   /** Runs given strategy, forces return to be a promise */
-  private runStrategy(strategy: AuthenticationStrategy, machine: Transitionable) {
+  private runStrategy(strategy: AuthenticationStrategy, machine: Transitionable): Promise<StrategyResult> {
     this.logger.debug("Running strategy " + strategy.constructor.name);
     return Promise.resolve(strategy.authenticate(this.state, this.stateName, this.intent, machine));
   }
