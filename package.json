@@ -47,7 +47,9 @@
     "tslint-config-prettier": "^1.13.0",
     "typescript": "~2.9.2",
     "inversify": "4.1.1",
-    "inversify-components": "^0.4.0"
+    "inversify-components": "^0.4.0",
+    "lodash": ">=4.17.5",
+    "atob": ">=2.1.0"
   },
   "dependencies": {
     "@types/reflect-metadata": "0.0.5"
