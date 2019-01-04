@@ -14,9 +14,9 @@ const oAuthStrategy = require("../support/mocks/auth-strategies/oauth-strategy")
 const pinStrategy = require("../support/mocks/auth-strategies/pin-strategy").PinStrategy;
 
 beforeEach(function() {
-  this.specHelper = new assistantJsCore.SpecHelper();
+  this.assistantJs = new assistantJsCore.AssistantJSSetup();
+  this.specHelper = new assistantJsCore.SpecHelper(this.assistantJs);
 
-  this.assistantJs = this.specHelper.setup;
   this.assistantJs.registerComponent(alexa.descriptor);
   this.assistantJs.registerComponent(ownComponent.descriptor);
   this.assistantJs.registerComponent(assistantValidations.descriptor);
