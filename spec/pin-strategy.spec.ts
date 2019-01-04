@@ -5,7 +5,7 @@ import { PinStrategy } from "./support/mocks/auth-strategies/pin-strategy";
 import { MainState } from "./support/mocks/states/main";
 
 import { injectionNames, Session, Transitionable } from "assistant-source";
-import { ThisContext } from "./this-context";
+import { ThisContext } from "./support/this-context";
 
 interface CurrentThisContext extends ThisContext {
   /** Initializes the necessary spec setup */
@@ -30,7 +30,7 @@ describe("PinAuthentication", function() {
         extraction = pinIsValid ? makeValidPinExtraction() : { entities: { pin: "1234" } };
       }
 
-      await this.alexaSpecHelper.pretendIntentCalled("pinStrategy", false, extraction);
+      await this.alexaSpecHelper.pretendIntentCalled("pinStrategy", extraction);
       strategyClass = this.container.inversifyInstance.getTagged(componentInterfaces.authenticationStrategy, "strategy", PinStrategy) as PinStrategy;
       machine = this.container.inversifyInstance.get(injectionNames.current.stateMachine);
       currentSessionFactory = this.container.inversifyInstance.get(injectionNames.current.sessionFactory);
@@ -65,8 +65,8 @@ describe("PinAuthentication", function() {
       describe("assistant-validations is enabled", function() {
         it("prompts for pin", async function(this: CurrentThisContext) {
           await callAuthenticate();
-          await this.alexaSpecHelper.specSetup.runMachine("MainState");
-          const result = this.alexaSpecHelper.specSetup.getResponseResults();
+          await this.alexaSpecHelper.specHelper.runMachine("MainState");
+          const result = this.alexaSpecHelper.specHelper.getResponseResults();
           expect(result.voiceMessage!.text).toEqual("Asking pin");
         });
       });

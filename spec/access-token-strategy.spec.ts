@@ -3,7 +3,7 @@ import { AuthenticationResult } from "../src/components/authentication/public-in
 /** Mock strategy classes, only used for this test */
 import { AccountLinkingStatus, MinimalRequestExtraction, OptionalExtractions } from "assistant-source";
 import { OAuthStrategy } from "./support/mocks/auth-strategies/oauth-strategy";
-import { ThisContext } from "./this-context";
+import { ThisContext } from "./support/this-context";
 
 class OAuthMock extends OAuthStrategy {
   constructor(extraction: MinimalRequestExtraction & OptionalExtractions.OAuth & OptionalExtractions.AccountLinking) {

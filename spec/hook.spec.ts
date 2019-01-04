@@ -1,5 +1,5 @@
 import { callIntentHelper } from "./support/call-intent-helper";
-import { ThisContext } from "./this-context";
+import { ThisContext } from "./support/this-context";
 
 describe("BeforeIntentHook", function() {
   beforeEach(async function(this: ThisContext) {
