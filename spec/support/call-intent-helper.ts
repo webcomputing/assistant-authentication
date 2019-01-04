@@ -25,9 +25,9 @@ export async function callIntentHelper(
     return { ...previous, ...extraction };
   }, {});
 
-  await alexaSpecHelper.pretendIntentCalled(intent, false, extractions);
-  await alexaSpecHelper.specSetup.runMachine(state);
-  return alexaSpecHelper.specSetup.getResponseResults();
+  await alexaSpecHelper.pretendIntentCalled(intent, extractions);
+  await alexaSpecHelper.specHelper.runMachine(state);
+  return alexaSpecHelper.specHelper.getResponseResults();
 }
 
 export function makeValidOAuthExtraction() {
