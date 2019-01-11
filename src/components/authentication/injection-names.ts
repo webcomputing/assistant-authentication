@@ -5,12 +5,7 @@ export const authenticationInjectionNames = {
    */
   component: "meta:component//authentication",
   /**
-   * Namespace for services which are only available in the request scope.
+   * Inject an instance of @type {(strategyClass: StrategyClass) => any}
    */
-  current: {
-    /**
-     * Inject an instance of @type {(strategyClass: StrategyClass) => any}
-     */
-    strategyFactory: "authentication:strategy-factory",
-  },
+  strategyFactory: "authentication:strategy-factory",
 };
