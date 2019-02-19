@@ -1,4 +1,4 @@
-import { AccountLinkingStatus, MinimalRequestExtraction, OptionalExtractions } from "assistant-source";
+import { AccountLinkingStatus, injectionNames, MinimalRequestExtraction, OptionalExtractions } from "assistant-source";
 import { inject, injectable } from "inversify";
 
 import { AuthenticationResult, AuthenticationStrategy as StrategyInterface, StrategyResult } from "../public-interfaces";
@@ -6,7 +6,7 @@ import { AuthenticationResult, AuthenticationStrategy as StrategyInterface, Stra
 @injectable()
 export abstract class AccessTokenAuthentication implements StrategyInterface {
   constructor(
-    @inject("core:unifier:current-extraction") private extraction: MinimalRequestExtraction & OptionalExtractions.OAuth & OptionalExtractions.AccountLinking
+    @inject(injectionNames.current.extraction) private extraction: MinimalRequestExtraction & OptionalExtractions.OAuth & OptionalExtractions.AccountLinking
   ) {}
 
   public async authenticate(): Promise<StrategyResult> {
