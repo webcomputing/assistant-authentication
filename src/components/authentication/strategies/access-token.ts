@@ -1,28 +1,31 @@
-import { injectable, inject } from "inversify";
-import { OptionalExtractions, MinimalRequestExtraction } from "assistant-source";
+import { AccountLinkingStatus, injectionNames, MinimalRequestExtraction, OptionalExtractions } from "assistant-source";
+import { inject, injectable } from "inversify";
 
-import { AuthenticationStrategy as StrategyInterface, AuthenticationResult } from "../public-interfaces";
+import { AuthenticationResult, AuthenticationStrategy as StrategyInterface, StrategyResult } from "../public-interfaces";
 
 @injectable()
 export abstract class AccessTokenAuthentication implements StrategyInterface {
-  private extraction: MinimalRequestExtraction & OptionalExtractions.OAuthExtraction;
+  constructor(
+    @inject(injectionNames.current.extraction) private extraction: MinimalRequestExtraction & OptionalExtractions.OAuth & OptionalExtractions.AccountLinking
+  ) {}
 
-  constructor(@inject("core:unifier:current-extraction") extraction: MinimalRequestExtraction & OptionalExtractions.OAuthExtraction) {
-    this.extraction = extraction;
-  }
+  public async authenticate(): Promise<StrategyResult> {
+    if (this.extraction.accountLinkingStatus === AccountLinkingStatus.CANCELLED) {
+      return AuthenticationResult.Cancelled;
+    }
 
-  async authenticate() {
-    if (typeof this.extraction.oAuthToken === "undefined") return AuthenticationResult.ForcePlatformAuthentication;
+    if (typeof this.extraction.oAuthToken === "undefined") {
+      return AuthenticationResult.ForcePlatformAuthentication;
+    }
 
-    let methodResult = await this.validateAccessToken(this.extraction.oAuthToken as string);
-    let internalResult = typeof methodResult === "boolean" ? { result: methodResult, authenticationData: {} } : methodResult;
+    const methodResult = await this.validateAccessToken(this.extraction.oAuthToken as string);
+    const internalResult = typeof methodResult === "boolean" ? { result: methodResult, authenticationData: {} } : methodResult;
 
     if (internalResult.result) {
       return { status: AuthenticationResult.Authenticated, authenticatedData: internalResult.authenticationData };
-    } else {
-      return AuthenticationResult.ForcePlatformAuthentication;
     }
+    return AuthenticationResult.ForcePlatformAuthentication;
   }
 
-  abstract async validateAccessToken(token: string): Promise<boolean | { result: boolean, authenticationData: any }>;
+  public abstract async validateAccessToken(token: string): Promise<boolean | { result: boolean; authenticationData: any }>;
 }

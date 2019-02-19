@@ -1,12 +1,12 @@
-import { Transitionable, Constructor } from "assistant-source";
+import { Constructor, Transitionable } from "assistant-source";
 import { Configuration } from "./private-interfaces";
 
 /** Configuration of authentication component */
-export interface AuthenticationConfiguration extends Partial<Configuration.Defaults>, Configuration.Required {};
+export interface AuthenticationConfiguration extends Partial<Configuration.Defaults>, Configuration.Required {}
 
 /** Property describing the configuration of the authentication component */
 export interface AuthenticationConfigurationAttribute {
-  "authentication"?: AuthenticationConfiguration;
+  authentication?: AuthenticationConfiguration;
 }
 
 /** Possible results of your authenthication strategy */
@@ -14,17 +14,20 @@ export enum AuthenticationResult {
   /** If authentication was successful */
   Authenticated,
 
+  /** If Authentication was canceld by the user */
+  Cancelled,
+
   /** If authentication was not successful in general. You should NOT reject in this case, use resolve(AuthenticationResult.Failed)! reject() will result in an error message! */
   Failed,
 
   /** Authentication failed because of missing platform linking / paltform authentication */
-  ForcePlatformAuthentication, 
+  ForcePlatformAuthentication,
 
   /** Does not execute the intent (same as Failed), but also does not respond to client. You can use this to redirect to an authentication state for example. */
   Deferred,
 }
 /** Internal abbrevation for result of your strategy */
-export declare type StrategyResult = { status: AuthenticationResult, authenticatedData?: {} } | AuthenticationResult;
+export declare type StrategyResult = { status: AuthenticationResult; authenticatedData?: {} } | AuthenticationResult;
 
 /** Interface to implement for every authentication strategy you are using */
 export interface AuthenticationStrategy {
@@ -32,9 +35,7 @@ export interface AuthenticationStrategy {
 }
 
 /** Constructor interface for strategy classes */
-export interface StrategyClass extends Constructor<AuthenticationStrategy> {};
+export interface StrategyClass extends Constructor<AuthenticationStrategy> {}
 
 /** Factory to build authentication strategies */
-export interface StrategyFactory {
-  (strategy: StrategyClass): AuthenticationStrategy
-}
+export type StrategyFactory = (strategy: StrategyClass) => AuthenticationStrategy;

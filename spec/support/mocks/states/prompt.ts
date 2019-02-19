@@ -1,14 +1,25 @@
-import { injectable, inject } from "inversify";
-import { State, EntityDictionary, CurrentSessionFactory, PlatformGenerator, injectionNames, BaseState } from "assistant-source";
-import { PromptStateMixinRequirements, PromptStateMixin } from "assistant-validations";
+import {
+  BaseState,
+  BasicAnswerTypes,
+  BasicHandable,
+  CurrentSessionFactory,
+  EntityDictionary,
+  injectionNames,
+  PlatformGenerator,
+  State,
+} from "assistant-source";
+import { PromptStateMixin, PromptStateMixinRequirements } from "assistant-validations";
+import { inject, injectable } from "inversify";
 
-/** 
- * This small class is needed to apply the PromptStateMixin since TypeScript does not allow type-specific constructor mixins. 
+/**
+ * This small class is needed to apply the PromptStateMixin since TypeScript does not allow type-specific constructor mixins.
  * Just add it to your regular class hierarchy.
  */
-class PromptStateRequirements extends BaseState implements PromptStateMixinRequirements {
+class PromptStateRequirements<MergedAnswerTypes extends BasicAnswerTypes, MergedHandler extends BasicHandable<MergedAnswerTypes>>
+  extends BaseState<MergedAnswerTypes, MergedHandler>
+  implements PromptStateMixinRequirements {
   constructor(
-    stateSetupSet: State.SetupSet,
+    stateSetupSet: State.SetupSet<MergedAnswerTypes, MergedHandler>,
     public entities: EntityDictionary,
     public sessionFactory: CurrentSessionFactory,
     public mappings: PlatformGenerator.EntityMapping
@@ -17,13 +28,16 @@ class PromptStateRequirements extends BaseState implements PromptStateMixinRequi
   }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 @injectable()
-export class PromptState extends PromptStateMixin(PromptStateRequirements) {
+export class PromptState<MergedAnswerTypes extends BasicAnswerTypes, MergedHandler extends BasicHandable<MergedAnswerTypes>> extends PromptStateMixin(
+  PromptStateRequirements
+) {
   constructor(
-    @inject(injectionNames.current.stateSetupSet) setupSet: State.SetupSet,
+    @inject(injectionNames.current.stateSetupSet) setupSet: State.SetupSet<MergedAnswerTypes, MergedHandler>,
     @inject(injectionNames.current.entityDictionary) entities: EntityDictionary,
     @inject(injectionNames.current.sessionFactory) sessionFactory: CurrentSessionFactory,
-    @inject("core:unifier:user-entity-mappings") mappings: PlatformGenerator.EntityMapping
+    @inject(injectionNames.userEntityMapping) mappings: PlatformGenerator.EntityMapping
   ) {
     super(setupSet, entities, sessionFactory, mappings);
   }
