@@ -51,7 +51,7 @@ describe("PinAuthentication", function() {
 
         describe("assistant-validations is not enabled", function() {
           it("throws exception", async function(this: CurrentThisContext) {
-            (strategyClass as any).promptFactory = undefined;
+            (strategyClass as any).validationsInitializer = undefined;
             try {
               await callAuthenticate();
               fail();

@@ -12,6 +12,7 @@ import {
 } from "assistant-source";
 import { inject, injectable } from "inversify";
 import { authenticateMetadataKey } from "./annotations";
+import { authenticationInjectionNames } from "./injection-names";
 import { COMPONENT_NAME } from "./private-interfaces";
 import { AuthenticationResult, AuthenticationStrategy, StrategyClass, StrategyFactory, StrategyResult } from "./public-interfaces";
 
@@ -23,7 +24,7 @@ export class BeforeIntentHook {
   private logger: Logger;
 
   constructor(
-    @inject("authentication:strategy-factory") private strategyFactory: StrategyFactory,
+    @inject(authenticationInjectionNames.strategyFactory) private strategyFactory: StrategyFactory,
     @inject(injectionNames.current.responseHandler) private responseHandler: BasicHandable<BasicAnswerTypes> & OptionalHandlerFeatures.Authentication,
     @inject(injectionNames.current.translateHelper) private i18n: TranslateHelper,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory
