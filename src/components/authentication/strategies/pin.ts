@@ -1,5 +1,5 @@
 import { ComponentSpecificLoggerFactory, EntityDictionary, injectionNames, Logger, Session, Transitionable } from "assistant-source";
-import { PromptFactory } from "assistant-validations";
+import { ValidationsInitializer, validationsInjectionNames } from "assistant-validations";
 import { inject, injectable, optional } from "inversify";
 
 import { COMPONENT_NAME } from "../private-interfaces";
@@ -9,7 +9,7 @@ import { AuthenticationResult, AuthenticationStrategy as StrategyInterface } fro
 export abstract class PinAuthentication implements StrategyInterface {
   private sessionFactory: () => Session;
   private entities: EntityDictionary;
-  private promptFactory: PromptFactory;
+  private validationsInitializer: ValidationsInitializer;
   private logger: Logger;
 
   constructor(
@@ -17,11 +17,11 @@ export abstract class PinAuthentication implements StrategyInterface {
     @inject(injectionNames.current.entityDictionary) entities: EntityDictionary,
     @inject(injectionNames.componentSpecificLoggerFactory) loggerFactory: ComponentSpecificLoggerFactory,
     @optional()
-    @inject("validations:current-prompt-factory")
-    promptFactory: PromptFactory
+    @inject(validationsInjectionNames.current.validationsInitializer)
+    validationsInitializer: ValidationsInitializer
   ) {
     this.sessionFactory = sessionFactory;
-    this.promptFactory = promptFactory;
+    this.validationsInitializer = validationsInitializer;
     this.entities = entities;
     this.logger = loggerFactory(COMPONENT_NAME);
   }
@@ -62,15 +62,15 @@ export abstract class PinAuthentication implements StrategyInterface {
    * Feel free to overwrite this method if you need an other behaviour or if you do not use assistant-entity-validator.
    */
   public async startPinAuthentication(intent: string, stateName: string, machine: Transitionable): Promise<void> {
-    if (typeof this.promptFactory === "undefined" || this.promptFactory === null) {
+    if (typeof this.validationsInitializer === "undefined" || this.validationsInitializer === null) {
       throw new Error(
-        "Could not inject promptFactory from assistant-validations. You possibly did not install or configure assistant-validations. " +
+        "Could not inject validationsInitializer from assistant-validations. You possibly did not install or configure assistant-validations. " +
           "If you do not want to use assistant-validations, overwrite this method in your strategy class to implement your own behaviour."
       );
     }
 
     this.logger.info(`PinStrategy: Starting pin prompting with intent = ${intent}, stateName = ${stateName}.`);
-    return this.promptFactory(intent, stateName, machine).prompt("pin");
+    return this.validationsInitializer.initializePrompt(stateName, intent, "pin");
   }
 
   public abstract async validatePin(pin: string): Promise<boolean>;
